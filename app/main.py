@@ -71,6 +71,9 @@ def main():
                 print(f"Error: The file {file_path} does not exist.", file=sys.stderr)
             except Exception as e:
                 print(f"An error occurred: {e}", file=sys.stderr)
+    else:
+    # If no tool was called, show the text response
+        print(chat.choices[0].message.content)
     
 
 
