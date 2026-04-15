@@ -1,6 +1,7 @@
 import argparse
 import os
 import sys
+import json
 
 from openai import OpenAI
 
@@ -21,6 +22,7 @@ def main():
     chat = client.chat.completions.create(
         model="anthropic/claude-haiku-4.5",
         messages=[{"role": "user", "content": args.p}],
+        max_tokens=1000,
         tools=[{
             "type": "function",
             "function": {
@@ -47,7 +49,30 @@ def main():
     print("Logs from your program will appear here!", file=sys.stderr)
 
     # TODO: Uncomment the following line to pass the first stage
-    print(chat.choices[0].message.content)
+    # This will show you the 'tool_calls' if the model decided to use the tool
+    print(chat.choices[0].message.tool_calls[0].function.arguments, file=sys.stderr)
+
+
+    #print(chat.choices[0].message.content)
+
+    if chat.choices[0].message.tool_calls:
+        tool_call = chat.choices[0].message.tool_calls[0]
+    
+        if tool_call.function.name == "Read":
+            args_string = tool_call.function.arguments
+            args_dict = json.loads(args_string)
+            file_path = args_dict["file_path"]
+            
+            try:
+                with open(file_path, "r", encoding="utf-8") as file:
+                    content = file.read()
+                    # Print to stdout for the test runner to see
+                    print(content)
+            except FileNotFoundError:
+                print(f"Error: The file {file_path} does not exist.", file=sys.stderr)
+            except Exception as e:
+                print(f"An error occurred: {e}", file=sys.stderr)
+    
 
 
 if __name__ == "__main__":
