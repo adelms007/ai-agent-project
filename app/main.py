@@ -50,7 +50,6 @@ def main():
 
     # TODO: Uncomment the following line to pass the first stage
     # This will show you the 'tool_calls' if the model decided to use the tool
-    print(chat.choices[0].message.tool_calls[0].function.arguments, file=sys.stderr)
 
 
     #print(chat.choices[0].message.content)
