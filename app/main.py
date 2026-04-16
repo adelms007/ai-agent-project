@@ -87,8 +87,8 @@ def main():
     while (chat.choices[0].message.tool_calls) :
         payload = chat.choices[0].message
         message.append(payload.model_dump())
-        if (chat.choices[0].message.content != None):
-            print(chat.choices[0].message.content)
+        #if (chat.choices[0].message.content != None):
+            #print(chat.choices[0].message.content)
 
         
         for tool_call in payload.tool_calls :
