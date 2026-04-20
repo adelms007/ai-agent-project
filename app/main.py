@@ -20,41 +20,7 @@ def main():
 
     client = OpenAI(api_key=API_KEY, base_url=BASE_URL)
 
-    # chat = client.chat.completions.create(
-    #     model="anthropic/claude-haiku-4.5",
-    #     messages=[{"role": "user", "content": args.p}],
-    #     max_tokens=1000,
-    #     tools=[{
-    #         "type": "function",
-    #         "function": {
-    #             "name": "Read",
-    #             "description": "Read and return the contents of a file",
-    #             "parameters": {
-    #             "type": "object",
-    #             "properties": {
-    #                 "file_path": {
-    #                 "type": "string",
-    #                 "description": "The path to the file to read"
-    #                 }
-    #             },
-    #             "required": ["file_path"]
-    #             }
-    #         }
-    #         }],
-    # )
-
-
-    # if not chat.choices or len(chat.choices) == 0:
-    #     raise RuntimeError("no choices in response")
-
-    # You can use print statements as follows for debugging, they'll be visible when running tests.
     print("Logs from your program will appear here!", file=sys.stderr)
-
-    # TODO: Uncomment the following line to pass the first stage
-    # This will show you the 'tool_calls' if the model decided to use the tool
-
-
-
 
     message=[{"role": "user", "content": args.p}]
     tool = [{
@@ -126,8 +92,6 @@ def main():
     while (chat.choices[0].message.tool_calls) :
         payload = chat.choices[0].message
         message.append(payload.model_dump())
-        #if (chat.choices[0].message.content != None):
-            #print(chat.choices[0].message.content)
 
         
         for tool_call in payload.tool_calls :
@@ -187,38 +151,6 @@ def main():
 
 
     print(chat.choices[0].message.content)
-        
-
-
-
-
-
-
-    # print(chat)
-
-    # if chat.choices[0].message.tool_calls:
-    #     tool_call = chat.choices[0].message.tool_calls[0]
-    
-    #     if tool_call.function.name == "Read":
-    #         args_string = tool_call.function.arguments
-    #         args_dict = json.loads(args_string)
-    #         file_path = args_dict["file_path"]
-             
-    #         try:
-    #             with open(file_path, "r", encoding="utf-8") as file:
-    #                 content = file.read()
-    #                 # Print to stdout for the test runner to see
-    #                 print(content)
-    #         except FileNotFoundError:
-    #             print(f"Error: The file {file_path} does not exist.", file=sys.stderr)
-    #         except Exception as e:
-    #             print(f"An error occurred: {e}", file=sys.stderr)
-    # else:
-    # # If no tool was called, show the text response
-    #     print(chat.choices[0].message.content)
-
-    
-    
 
 
 if __name__ == "__main__":
