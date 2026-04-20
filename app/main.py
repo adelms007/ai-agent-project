@@ -102,6 +102,8 @@ def main():
         tools=tool,
     )
 
+    print(chat)
+
     if not chat.choices or len(chat.choices) == 0:
         raise RuntimeError("no choices in response")
 
@@ -128,6 +130,21 @@ def main():
                     print(f"Error: The file {file_path} does not exist.", file=sys.stderr)
                 except Exception as e:
                     print(f"An error occurred: {e}", file=sys.stderr)
+            
+            if tool_call.function.name == "Write":
+                args_string = tool_call.function.arguments
+                args_dict = json.loads(args_string)
+                file_path = args_dict["file_path"]
+                file_content = args_dict["content"]
+                
+                try:
+                    with open(file_path, "w", encoding="utf-8") as file:
+                        file.write(file_content)
+                    result = f"Successfully wrote to {file_path}"
+                        
+                except Exception as e:
+                    print(f"An error occurred: {e}", file=sys.stderr)
+                    result = f"Error: Could not write to file. {str(e)}"
             
             message.append({
                 "role": "tool",
