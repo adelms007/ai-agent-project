@@ -167,7 +167,7 @@ def main():
                 args_dict = json.loads(args_string)
                 command = args_dict["command"]
 
-                target_path=r"C:\Users\adele\Desktop\projects\codecrafters-claude-code-python"
+                target_path="."
                 
                 result = subprocess.run(command, cwd=target_path, shell=True, capture_output=True, text=True)
                 result = result.stdout if result.returncode == 0 else result.stderr
