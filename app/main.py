@@ -2,6 +2,7 @@ import argparse
 import os
 import sys
 import json
+import subprocess
 
 from openai import OpenAI
 
@@ -92,6 +93,22 @@ def main():
                     }
                     }
                 }
+                },{
+                "type": "function",
+                "function": {
+                    "name": "Bash",
+                    "description": "Execute a shell command",
+                    "parameters": {
+                    "type": "object",
+                    "required": ["command"],
+                    "properties": {
+                        "command": {
+                        "type": "string",
+                        "description": "The command to execute"
+                        }
+                    }
+                    }
+                }
                 }
             ]
 
@@ -104,6 +121,7 @@ def main():
 
     if not chat.choices or len(chat.choices) == 0:
         raise RuntimeError("no choices in response")
+
 
     while (chat.choices[0].message.tool_calls) :
         payload = chat.choices[0].message
@@ -143,6 +161,16 @@ def main():
                 except Exception as e:
                     print(f"An error occurred: {e}", file=sys.stderr)
                     result = f"Error: Could not write to file. {str(e)}"
+
+            if tool_call.function.name == "Bash":
+                args_string = tool_call.function.arguments
+                args_dict = json.loads(args_string)
+                command = args_dict["command"]
+
+                target_path = r"C:\Users\adele\Desktop\projects\codecrafters-claude-code-python"
+                
+                result = subprocess.run(command, cwd=target_path, shell=True, capture_output=True, text=True)
+                result = result.stdout if result.returncode == 0 else result.stderr
             
             message.append({
                 "role": "tool",
