@@ -57,6 +57,7 @@ while (chat.choices[0].message.tool_calls):
     
     # Re-verify task evaluation tracking
     chat = client.chat.completions.create(...)# Local Claude Code AI Agent Clone
+```
 
 A lightweight, local command-line implementation of an AI developer agent. This assistant utilizes LLM function calling via the OpenAI SDK wrapper (configured for OpenRouter) to autonomously read files, write source code, and interact directly with a localized sub-shell environment.
 
